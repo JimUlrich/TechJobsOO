@@ -15,6 +15,16 @@ namespace TechJobs.ViewModels
         [Display(Name = "Employer")]
         public int EmployerID { get; set; }
 
+        [Required]
+        public int LocationID { get; set; }
+
+        [Required]
+        [Display(Name = "Skill")]
+        public int CoreCompentencyID { get; set; }
+
+        [Required]
+        public int PositionTypeID { get; set; }
+
         // TODO #3 - Included other fields needed to create a job,
         // with correct validation attributes and display names.
 
@@ -36,9 +46,56 @@ namespace TechJobs.ViewModels
                 });
             }
 
-            // TODO #4 - populate the other List<SelectListItem> 
-            // collections needed in the view
+            foreach (Location field in jobData.Locations.ToList())
+            {
+                Locations.Add(new SelectListItem
+                {
+                    Value = field.ID.ToString(),
+                    Text = field.Value
+                });
+            }
+
+            foreach (CoreCompetency field in jobData.CoreCompetencies.ToList())
+            {
+                CoreCompetencies.Add(new SelectListItem
+                {
+                    Value = field.ID.ToString(),
+                    Text = field.Value
+                });
+            }
+
+            foreach (PositionType field in jobData.PositionTypes.ToList())
+            {
+                PositionTypes.Add(new SelectListItem
+                {
+                    Value = field.ID.ToString(),
+                    Text = field.Value
+                });
+            }
+        }
+
+
+
+        public Job CreateJob()
+        {
+            JobData jobData = JobData.GetInstance();
+
+            Job newJob = new Job
+            {
+                Name = this.Name,
+                Employer = jobData.Employers.Find(EmployerID),
+                Location = jobData.Locations.Find(LocationID),
+                CoreCompetency = jobData.CoreCompetencies.Find(CoreCompentencyID),
+                PositionType = jobData.PositionTypes.Find(PositionTypeID),
+            };
+
+            return newJob;
 
         }
+
+        
+        
+
+
     }
 }
